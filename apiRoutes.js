@@ -1,12 +1,12 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 var axios = require("axios");
 var cheerio = require("cheerio");
 
-var db = require("./models");
+var Article = require("./models/Article");
 
 var PORT = 3000;
 
@@ -43,4 +43,18 @@ app.post("/articles/:id", function (req, res) {
 
 app.post("/articles/:id/:note", function (req, res) {
     // if note exists delete note.. if it doesn't add note.
+})
+
+app.post("/create/articles", function (req, res) {
+    var article = new Article({ headline: "testHeadline", summary: "testing headline", url: "blah" });
+    article.save(function (err, article) {
+        if (err)
+            console.log(err);
+
+        console.log(article);
+    });
+});
+
+app.listen(PORT, function () {
+    console.log("App running on port " + PORT);
 })
