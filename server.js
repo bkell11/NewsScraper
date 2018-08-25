@@ -3,29 +3,36 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
 
-var axios = require("axios");
+var request = require("request");
 var cheerio = require("cheerio");
 
 var Article = require("./models/Article");
 // var db = require("./models");
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 var app = express();
 
 app.use(logger("dev"));
 
+app.use(express.static("public"));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static("public"));
+app.use(bodyParser.json());
+
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 mongoose.connect("mongodb://localhost/articledb");
 
 app.get("/scrape", function (req, res) {
 
-    axios.get("http://www.mlb.com/").then(function (response) {
+    request("http://www.mlb.com/", function (error, response, html) {
         //use cheerio to get html and scrape the html for news articles
         // then save them to the database.
-        var $ = cheerio.load(response.data);
+        var $ = cheerio.load(html);
 
         $(".p-headline-stack__headline").each(function (i, element) {
 
@@ -48,8 +55,10 @@ app.get("/scrape", function (req, res) {
                     console.log(dbArticle);
             });
         })
-    })
-})
+
+
+    });
+});
 
 
 app.get("/articles/getsavedarticles", function (req, res) {
