@@ -27,6 +27,18 @@ app.set("view engine", "handlebars");
 
 mongoose.connect("mongodb://localhost/articledb");
 
+app.get("/", function (req, res) {
+    // get articles saved or all
+    Article.find({ isSaved: false }, function (err, dbArticles) {
+        if (err)
+            res.json(err);
+        else
+            res.render("index", { articles: dbArticles });
+        // res.json(dbArticles);
+    });
+});
+
+
 app.get("/scrape", function (req, res) {
 
     request("http://www.mlb.com/", function (error, response, html) {
@@ -34,9 +46,11 @@ app.get("/scrape", function (req, res) {
         // then save them to the database.
         var $ = cheerio.load(html);
 
+        var results = [];
+
         $(".p-headline-stack__headline").each(function (i, element) {
 
-            var article = new Article();
+            let article = new Article();
 
             article.headline = $(this)
                 .children("a")
@@ -48,15 +62,18 @@ app.get("/scrape", function (req, res) {
                 .children("a")
                 .attr("href");
 
-            article.save(function (err, dbArticle) {
-                if (err)
-                    res.json(err);
-                else
-                    console.log(dbArticle);
+            results.push({
+                headline: article.headline,
+                summary: article.headline,
+                url: article.url
             });
-        })
-
-
+        });
+        Article.create(results, function (err, dbArticle) {
+            if (err)
+                res.json(err);
+            else
+                console.log(dbArticle);
+        });
     });
 });
 
@@ -64,16 +81,6 @@ app.get("/scrape", function (req, res) {
 app.get("/articles/getsavedarticles", function (req, res) {
     // get articles saved or all
     Article.find({ isSaved: true }, function (err, dbArticles) {
-        if (err)
-            res.json(err);
-        else
-            res.json(dbArticles);
-    });
-});
-
-app.get("/articles", function (req, res) {
-    // get articles saved or all
-    Article.find({ isSaved: false }, function (err, dbArticles) {
         if (err)
             res.json(err);
         else

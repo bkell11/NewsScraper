@@ -1,0 +1,18 @@
+<h1 id="header">Baseball News!</h1>
+
+<!-- Pass in data from server.js -->
+<div class="row ">
+    <div class="col s6 offset-s3">
+        {{#each articles}}
+        <div class="card grey lighten-2 center-align">
+            <div class="card-content" id="card-text">
+                <p><span class="label ">Title:</span> {{this.headline}}</p>
+            </div>
+            <div class="card-action ">
+                <a href="{{this.url}} " id="link" target="_blank">Go To Article</a>
+                <a class="save-button" id="link" href="!# ">Save Article</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
