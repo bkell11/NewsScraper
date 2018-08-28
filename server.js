@@ -34,7 +34,7 @@ app.get("/", function (req, res) {
             res.json(err);
         else
             res.render("index", { articles: dbArticles });
-        // res.json(dbArticles);
+
     });
 });
 
@@ -67,7 +67,7 @@ app.get("/scrape", function (req, res) {
                 url: article.url
             });
         });
-        Article.create(results, function (err, dbArticle) {
+        Article.create(results, function (err, dbArticles) {
             if (err)
                 res.json(err);
             else

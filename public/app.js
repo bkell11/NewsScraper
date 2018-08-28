@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     //     // Setting a reference to the article-container div where all the dynamic content will go
     //     // Adding event listeners to any dynamically generated "save article"
@@ -8,19 +7,7 @@ $(document).ready(function () {
     $(document).on("click", "#scrape", handleArticleScrape);
     //     $(".clear").on("click", handleArticleClear);
 
-    function initPage() {
-        // Run an AJAX request for any unsaved headlines
-        $.get("/", function (req, res) {
-            // get articles saved or all
-            Article.find({ isSaved: false }, function (err, dbArticles) {
-                if (err)
-                    res.json(err);
-                else
-                    res.render("index", { articles: dbArticles });
-                // res.json(dbArticles);
-            });
-        });
-    }
+
 
     //     function renderArticles(articles) {
     //       // This function handles appending HTML containing our article data to the page
@@ -84,42 +71,30 @@ $(document).ready(function () {
     //     }
 
     function handleArticleSave() {
-        console.log("button clicked")
         // This function is triggered when the user wants to save an article
         // When we rendered the article initially, we attached a javascript object containing the headline id
         // to the element using the .data method. Here we retrieve that.
-        var articleToSave = $(this)
-            .parents("#article-card")
-            .data();
 
+        var id = $(this).data("id");
+        var savedData = {
+            isSaved: true
+        }
         // Remove card from page
-        $(this)
-            .parents("#article-card")
-            .remove();
-
-        articleToSave.isSaved = true;
         // Using a patch method to be semantic since this is an update to an existing record in our collection
         $.ajax({
             method: "POST",
-            url: "/articles/" + articleToSave._id,
-            data: articleToSave
-        }).then(function (data) {
-            // If the data was saved successfully
-            if (data.saved) {
-                // Run the initPage function again. This will reload the entire list of articles
-                initPage();
-            }
+            url: "/articles/" + id,
+            data: savedData
+        }).then(function () {
+            location.reload();
         });
     }
 
     function handleArticleScrape() {
         console.log("button clicked");
         // This function handles the user clicking any "scrape new article" buttons
-        $.get("/scrape").then(function (data) {
-            // If we are able to successfully scrape the NYTIMES and compare the articles to those
-            // already in our collection, re render the articles on the page
-            // and let the user know how many unique articles we were able to save
-            initPage();
+        $.get("/scrape", function (req, res) {
+            location.reload();
         });
     }
 
