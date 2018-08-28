@@ -13,12 +13,12 @@ body{
     color: #1e3257;
 }
 
-#link, #save-button{
+#link, #save-button, #note-button{
     color: #86324c;
     font-weight: bold;
 }
 
-#saved, #scrape{
+#saved, #scrape, #index{
     color: #86324c;
     background-color: #1e3257;
     font-weight: bold;

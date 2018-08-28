@@ -1,11 +1,17 @@
-<script src="app.js"></script>
+<script id="modal-template" type="text/x-handlebars-template">
+<div id="modal" class="modal">
+	<div class="modal-body">
+		<h2>Title</h2>
+		<p>Content</p>
+	</div>
+</div>
+</script>
 <h1 id="header">Baseball News!</h1>
 <div class="row">
     <div class="col s6 offset-s3">
         <div class="card grey lighten-2 center-align">
             <div class="card-content">
-                <a class="waves-effect waves-light btn" id="scrape">Get New Articles</a>
-                <a class="waves-effect waves-light btn" id="saved" href="/articles/getsavedarticles">Saved Articles</a>
+                <a class="waves-effect waves-light btn" id="index" href="/">Go Browse Articles</a>
             </div>
         </div>
     </div>
@@ -21,7 +27,7 @@
                 </div>
                 <div class="card-action">
                     <a href="{{this.url}}" id="link" target="_blank">Go To Article</a>
-                    <a class="save-button" id="save-button" data-id="{{this._id}}">Save Article</a>
+                    <a href="#" data-behaviour="modal" class="note-button" id="note-button">Article Notes</a>
                 </div>
             </div>
             {{/each}}

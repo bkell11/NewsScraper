@@ -83,7 +83,7 @@ app.get("/articles/getsavedarticles", function (req, res) {
         if (err)
             res.json(err);
         else
-            res.json(dbArticles);
+            res.render("saved", { articles: dbArticles });
     });
 });
 
@@ -109,7 +109,7 @@ app.post("/articles/:id", function (req, res) {
                 if (err)
                     res.json(err);
                 else
-                    res.status(200);
+                    res.json("success").status(200);
             });
         }
     })
@@ -117,7 +117,28 @@ app.post("/articles/:id", function (req, res) {
 
 app.post("/articles/:id/:note", function (req, res) {
     // if note exists delete note.. if it doesn't add note.
-})
+    Article.findById(req.params.id, function (err, dbArticle) {
+        if (err)
+            res.json(err);
+        else {
+            var index = dbArticle.notes.indexOf(req.params.note);
+
+            if (index > -1) {
+                dbArticle.notes.splice(index, 1);
+            }
+            else {
+                dbArticle.notes.push(req.params.note);
+            }
+
+            dbArticle.save(function (err, dbArticle) {
+                if (err)
+                    res.json(err);
+                else
+                    res.status(200);
+            });
+        }
+    });
+});
 
 
 
