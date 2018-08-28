@@ -38,7 +38,6 @@ app.get("/", function (req, res) {
     });
 });
 
-
 app.get("/scrape", function (req, res) {
 
     request("http://www.mlb.com/", function (error, response, html) {
@@ -72,7 +71,7 @@ app.get("/scrape", function (req, res) {
             if (err)
                 res.json(err);
             else
-                console.log(dbArticle);
+                res.render("index", { articles: dbArticles });
         });
     });
 });

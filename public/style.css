@@ -17,3 +17,9 @@ body{
     color: #86324c;
     font-weight: bold;
 }
+
+#saved, #scrape{
+    color: #86324c;
+    background-color: #1e3257;
+    font-weight: bold;
+}
